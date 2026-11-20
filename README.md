@@ -39,7 +39,7 @@ An overload additionally activates a latched fault, which must be manually reset
 
 ## Key Components
 
-### Inputs and Outputs
+### 1. Inputs and Outputs
 
 | Variable  | Description |
 | ------------- | ------------- |
@@ -51,7 +51,7 @@ An overload additionally activates a latched fault, which must be manually reset
 
 The `xStopHealthy` and `xOverloadHealthy` variables use a healthy-high convention, consistent with the expected signals from normally closed physical control contacts.
 
-### Internal Variables
+### 2. Internal Variables
 
 | Variable  | Description |
 | ------------- | ------------- |
@@ -60,7 +60,7 @@ The `xStopHealthy` and `xOverloadHealthy` variables use a healthy-high conventio
 | `tonMotorStartDelay`  | TON function block instance  |
 | `tMotorElapsed`  | Elapsed time of the startup timer  |
 
-## Ladder Logic Components
+## 3. Ladder Logic Components
 
 ### Rising-Edge Contacts
 
@@ -88,8 +88,67 @@ The timer begins counting when a valid start request is active. Its `Q` output b
 
 ## How the System Works
 
+### 1. Start Request
 
+Pressing Start generates a rising-edge signal.
 
+If the Stop circuit and overload relay are healthy and no fault is active, the program sets `xStartRequested` to `TRUE`.
+
+The Set coil retains this request after the Start button is released.
+
+### 2. Startup Delay
+
+The latched start request enables the TON function block.
+
+The timer counts for five seconds before allowing the motor to start.
+
+If the start request is cancelled during the countdown, the timer resets and the motor remains OFF.
+
+### 3. Motor Operation
+
+Once the timer finishes, its `Q` output becomes `TRUE`.
+
+The motor runs as long as the following conditions remain satisfied:
+
+- The start request remains active.
+- The Stop circuit is healthy.
+- The overload circuit is healthy.
+- No fault is active.
+
+### 4. Stop and Overload Handling
+
+Pressing Stop causes `xStopHealthy` to become `FALSE`.
+
+The motor is disabled, and the start request is reset.
+
+An overload is simulated by setting `xOverloadHealthy` to `FALSE`. This disables the motor and sets `xfaultActive` to `TRUE`.
+
+The fault remains latched even after the overload circuit returns to its healthy state.
+
+In an industrial application, an overload relay may trip when excessive motor current creates a risk of overheating, such as during excessive mechanical loading or a conveyor jam.
+
+This project simulates the PLC response to an overload relay rather than measuring motor current directly.
+
+### 5. Fault Reset and Restart
+
+To clear an overload fault:
+
+1. Restore `xOverloadHealthy` to `TRUE`.
+2. Ensure the Start button is released.
+3. Press Reset to clear `xfaultActive`.
+4. Press Start again to initiate a new five-second startup sequence.
+   
+The motor does not automatically restart after the fault is cleared.
+
+## Ladder Logic Implementation
+
+The program is organized into five Ladder Logic networks:
+
+1. **Start Request**: Detects a rising edge on Start and latches a valid start request.
+2. **Request Cancellation**: Uses an OR Boolean operator to reset the request when Stop, overload, or fault conditions occur.
+3. **Motor Startup Delay**: Uses a TON function block and operating permissives to control motor activation.
+4. **Overload Fault Latching**: Sets a persistent fault when the overload circuit becomes unhealthy.
+5. **Fault Reset**: Clears the latched fault following a valid manual Reset command.
 
 
 
