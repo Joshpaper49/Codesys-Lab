@@ -39,12 +39,55 @@ An overload additionally activates a latched fault, which must be manually reset
 
 ## Key Components
 
-## Inputs and Outputs
+### Inputs and Outputs
 
 | Variable  | Description |
 | ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| `xStartBtn`  | Start button input; `TRUE` when pressed |
+| `xStopHealthy`  | Stop circuit status; `TRUE` when the circuit is closed  |
+| `xOverloadHealthy`  | Overload relay status; TRUE when no overload trip is present  |
+| `xResetBtn`  | Manual fault reset button  |
+| `xMotor`  | Motor control output  |
+
+The `xStopHealthy` and `xOverloadHealthy` variables use a healthy-high convention, consistent with the expected signals from normally closed physical control contacts.
+
+### Internal Variables
+
+| Variable  | Description |
+| ------------- | ------------- |
+| `xStartRequested`  | Latched start request |
+| `xfaultActive`  | Latched overload fault  |
+| `tonMotorStartDelay`  | TON function block instance  |
+| `tMotorElapsed`  | Elapsed time of the startup timer  |
+
+## Ladder Logic Components
+
+### Rising-Edge Contacts
+
+Used for the Start and Reset buttons to detect new button presses. This prevents a continuously held button from repeatedly initiating its associated action.
+
+### Set/Reset Coils
+
+Used to retain the start request and overload fault until their respective reset conditions are satisfied.
+
+### OR Boolean Operator
+
+Combines three conditions that cancel the start request:
+
+- Stop circuit unhealthy (`NOT xStopHealthy`)
+- Overload circuit unhealthy (`NOT xOverloadHealthy`)
+- Active fault (`xfaultActive`)
+
+If any of these conditions occurs, `xStartRequested` is reset.
+
+### TON (Timer ON Delay)
+
+The `tonMotorStartDelay function` block delays motor activation by five seconds (`T#5s`).
+
+The timer begins counting when a valid start request is active. Its `Q` output becomes `TRUE` after the preset delay and remains `TRUE` while the timer input remains active.
+
+## How the System Works
+
 
 
 
