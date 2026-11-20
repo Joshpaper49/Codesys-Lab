@@ -151,8 +151,32 @@ The program is organized into five Ladder Logic networks:
 5. **Fault Reset**: Clears the latched fault following a valid manual Reset command.
 
 
+## How to Run the Project
 
+1. Install the CODESYS Development System.
+2. Clone or download this repository.
+3. Open the included .project file in CODESYS.
+4. Enable Online → Simulation.
+5. Build the project and log in to the simulated controller.
+6. Download the application if prompted, then start the PLC.
+7. Monitor and modify the input variables to simulate motor operation and fault conditions.
 
+### Initial Conditions
 
+The simulation uses the following initial input states:
 
+| Variable  | Initial Value |
+| ------------- | ------------- |
+| `xStartBtn`  | `FALSE` |
+| `xStopHealthy`  | `TRUE`  |
+| `xOverloadHealthy`  | `TRUE`  |
+| `xResetBtn`  | `FALSE`  |
+
+To simulate pressing a button, change its Boolean value in the online monitoring interface.
+
+To simulate an overload trip, set `xOverloadHealthy` to `FALSE`.
+
+## Demonstration
+
+Demo video *Coming soon*
 
