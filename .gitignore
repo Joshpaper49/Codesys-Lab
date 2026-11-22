@@ -1,0 +1,14 @@
+# CODESYS generated files
+*.compileinfo
+*.bootinfo
+*.bootinfo_guids
+*.opt
+*.~u
+*.precompilecache
+
+# CODESYS backup files
+*.project.~*
+*.project.bak
+
+# CODESYS generated folders
+*.project_files/
