@@ -151,7 +151,7 @@ The program is organized into five Ladder Logic networks:
 5. **Fault Reset**: Clears the latched fault following a valid manual Reset command.
 
 <p align="center">
-  <img src="MotorWithOverload/MotorOverloadimage.png" alt="ladder logic screenshot" width="600">
+  <img src="MotorWithOverload/MotorOverloadimage.png" alt="ladder logic screenshot" width="900">
 </p>
 
 ## How to Run the Project
