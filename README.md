@@ -150,6 +150,9 @@ The program is organized into five Ladder Logic networks:
 4. **Overload Fault Latching**: Sets a persistent fault when the overload circuit becomes unhealthy.
 5. **Fault Reset**: Clears the latched fault following a valid manual Reset command.
 
+<p align="center">
+  <img src="MotorWithOverload/MotorOverloadimage.png" alt="ladder logic screenshot" width="600">
+</p>
 
 ## How to Run the Project
 
